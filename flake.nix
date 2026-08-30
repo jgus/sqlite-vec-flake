@@ -34,6 +34,7 @@
             (pyfinal: pyprev: {
               sqlite-vec = pyprev.sqlite-vec.overridePythonAttrs (prevAttrs: {
                 inherit version src;
+                SETUPTOOLS_SCM_PRETEND_VERSION = version;
                 dependencies = [ sqliteVec ];
                 nativeCheckInputs = builtins.filter
                   (input: (input.pname or "") != "sqlite-vec")
