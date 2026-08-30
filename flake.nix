@@ -35,11 +35,16 @@
               sqlite-vec = pyprev.sqlite-vec.overridePythonAttrs (prevAttrs: {
                 inherit version src;
                 dependencies = [ sqliteVec ];
+                nativeBuildInputs = builtins.filter
+                  (input: (input.pname or "") != "pyproject-version-patch-hook.sh")
+                  (prevAttrs.nativeBuildInputs or [ ]);
                 nativeCheckInputs = builtins.filter
                   (input: (input.pname or "") != "sqlite-vec")
                   (prevAttrs.nativeCheckInputs or [ ]) ++ [ sqliteVec ];
                 postPatch = ''
                   cd python
+                  substituteInPlace pyproject.toml \
+                    --replace-fail 'dynamic = ["version"]' 'version = "${version}"'
                   mv extra_init.py sqlite_vec/
                   substituteInPlace sqlite_vec/__init__.py \
                     --replace-fail "@libpath@" "${final.lib.getLib sqliteVec}/lib/"
