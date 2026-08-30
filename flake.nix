@@ -40,6 +40,8 @@
                   (prevAttrs.nativeCheckInputs or [ ]) ++ [ sqliteVec ];
                 postPatch = ''
                   cd python
+                  substituteInPlace pyproject.toml \
+                    --replace-fail 'dynamic = ["version"]' 'version = "${version}"'
                   mv extra_init.py sqlite_vec/
                   substituteInPlace sqlite_vec/__init__.py \
                     --replace-fail "@libpath@" "${final.lib.getLib sqliteVec}/lib/"
