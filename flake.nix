@@ -35,6 +35,9 @@
               sqlite-vec = pyprev.sqlite-vec.overridePythonAttrs (prevAttrs: {
                 inherit version src;
                 dependencies = [ sqliteVec ];
+                nativeBuildInputs = builtins.filter
+                  (input: (input.pname or "") != "pyproject-version-patch-hook.sh")
+                  (prevAttrs.nativeBuildInputs or [ ]);
                 nativeCheckInputs = builtins.filter
                   (input: (input.pname or "") != "sqlite-vec")
                   (prevAttrs.nativeCheckInputs or [ ]) ++ [ sqliteVec ];
